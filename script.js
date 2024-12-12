@@ -24,12 +24,12 @@ function translateText() {
         return;
     }
 
-    // Regex untuk mendeteksi teks di dalam tanda kutip tunggal
+    // Regex untuk mendeteksi teks dalam tanda kutip tunggal
     const regex = /'([^']+)'/g;
     let protectedTexts = [];
     let modifiedText = inputText;
 
-    // Ambil semua teks dalam tanda kutip dan simpan
+    // Ambil teks dalam tanda kutip dan ganti dengan placeholder
     let match;
     while ((match = regex.exec(inputText)) !== null) {
         protectedTexts.push(match[1]);
@@ -40,23 +40,23 @@ function translateText() {
     if (mode === 'toCustom') {
         // Terjemahkan ke bahasa baru
         translatedText = modifiedText.toUpperCase().split('').map(char => {
-            // Abaikan spasi, angka, atau simbol
             if (alphabet_map[char]) {
                 return alphabet_map[char];
+            } else if (char === ' ') {
+                return ' ';
             }
-            return char; // Tetap utuh jika bukan huruf
+            return char;
         }).join(' ');
     } else {
         // Terjemahkan ke bahasa asli
-        translatedText = modifiedText.split('  ').map(wordGroup => {
-            return wordGroup.split(' ').map(word => {
-                // Abaikan spasi, angka, atau simbol
-                if (reverse_alphabet_map[word]) {
-                    return reverse_alphabet_map[word];
-                }
-                return word; // Tetap utuh jika bukan dalam peta translasi
-            }).join('');
-        }).join(' ');
+        translatedText = modifiedText.split(/\s+/).map(word => {
+            if (reverse_alphabet_map[word]) {
+                return reverse_alphabet_map[word];
+            } else if (word.includes('__PROTECTED_')) {
+                return word; // Abaikan placeholder
+            }
+            return word;
+        }).join('').replace(/__PROTECTED_(\d+)/g, (_, index) => `'${protectedTexts[index]}'`);
     }
 
     // Kembalikan teks yang dilindungi (dalam tanda kutip)
@@ -64,8 +64,7 @@ function translateText() {
         translatedText = translatedText.replace(`__PROTECTED_${index}__`, `'${text}'`);
     });
 
-    // Tampilkan hasil translasi
-    document.getElementById('translatedText').textContent = translatedText;
+    document.getElementById('translatedText').textContent = translatedText.trim();
     document.getElementById('resultAlert').style.display = 'block';
 }
 
@@ -95,4 +94,4 @@ function copyToClipboard() {
             confirmButtonText: 'OK'
         });
     }
-                                                                  }
+                }
