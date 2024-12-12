@@ -23,6 +23,7 @@ function checkPin() {
     const correctPin = "281206";
 
     if (pin === correctPin) {
+        document.getElementById('loginCard').style.display = 'none';
         document.getElementById('content').style.display = 'block';
         Swal.fire({
             title: 'Akses Berhasil!',
@@ -30,12 +31,13 @@ function checkPin() {
             icon: 'success',
             confirmButtonText: 'OK'
         });
+        localStorage.setItem('pinEntered', 'true');
     } else {
         Swal.fire({
             title: 'Akses Ditolak!',
-            text: 'PIN yang Anda masukkan salah. Akses ditolak.',
+            text: 'PIN yang Anda masukkan salah.',
             icon: 'error',
-            confirmButtonText: 'OK'
+            confirmButtonText: 'Coba Lagi'
         }).then(() => {
             document.getElementById('inputPin').value = '';
         });
@@ -46,15 +48,7 @@ function convertWord() {
     const inputWord = document.getElementById('inputWord').value;
     const convertedWord = convertToNewLanguage(inputWord);
     document.getElementById('result').textContent = convertedWord;
-}
-
-function showSweetAlert() {
-    Swal.fire({
-        title: 'Sweet Alert!',
-        text: 'Ini adalah Sweet Alert yang keren!',
-        icon: 'success',
-        confirmButtonText: 'OK'
-    });
+    document.getElementById('resultAlert').style.display = 'block';
 }
 
 function copyToClipboard() {
@@ -62,7 +56,7 @@ function copyToClipboard() {
     if (resultText) {
         navigator.clipboard.writeText(resultText).then(function() {
             Swal.fire({
-                title: 'Teks disalin!',
+                title: 'Teks Disalin!',
                 text: 'Hasil konversi telah disalin ke clipboard.',
                 icon: 'success',
                 confirmButtonText: 'OK'
@@ -80,7 +74,28 @@ function copyToClipboard() {
             title: 'Tidak Ada Hasil',
             text: 'Tidak ada teks yang bisa disalin.',
             icon: 'warning',
-            confirmButtonText: 'OK
-                });
+            confirmButtonText: 'OK'
+        });
     }
-            }
+}
+
+document.getElementById('togglePassword').addEventListener('click', function() {
+    const passwordField = document.getElementById('inputPin');
+    const icon = document.getElementById('togglePassword');
+    
+    if (passwordField.type === "password") {
+        passwordField.type = "text";
+        icon.classList.remove('fa-eye-slash');
+        icon.classList.add('fa-eye');
+    } else {
+        passwordField.type = "password";
+        icon.classList.remove('fa-eye');
+        icon.classList.add('fa-eye-slash');
+    }
+});
+
+// Cek jika PIN sudah dimasukkan sebelumnya
+if (localStorage.getItem('pinEntered') === 'true') {
+    document.getElementById('loginCard').style.display = 'none';
+    document.getElementById('content').style.display = 'block';
+                                                           }
