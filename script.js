@@ -26,14 +26,14 @@ function checkPin() {
         document.getElementById('content').style.display = 'block';
         Swal.fire({
             title: 'Akses Berhasil!',
-            text: 'PIN benar, Anda dapat mengonversi kata!',
+            text: 'PIN benar, Kamu dapat menggunakan KAA!',
             icon: 'success',
             confirmButtonText: 'OK'
         });
     } else {
         Swal.fire({
             title: 'Akses Ditolak!',
-            text: 'PIN yang Anda masukkan salah. Akses ditolak.',
+            text: 'PIN yang Kamu masukkan salah. Akses ditolak.',
             icon: 'error',
             confirmButtonText: 'OK'
         }).then(() => {
