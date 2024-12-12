@@ -40,13 +40,21 @@ function translateText() {
     if (mode === 'toCustom') {
         // Terjemahkan ke bahasa baru
         translatedText = modifiedText.toUpperCase().split('').map(char => {
-            return alphabet_map[char] || char;
+            // Abaikan spasi, angka, atau simbol
+            if (alphabet_map[char]) {
+                return alphabet_map[char];
+            }
+            return char; // Tetap utuh jika bukan huruf
         }).join(' ');
     } else {
         // Terjemahkan ke bahasa asli
         translatedText = modifiedText.split('  ').map(wordGroup => {
             return wordGroup.split(' ').map(word => {
-                return reverse_alphabet_map[word] || '';
+                // Abaikan spasi, angka, atau simbol
+                if (reverse_alphabet_map[word]) {
+                    return reverse_alphabet_map[word];
+                }
+                return word; // Tetap utuh jika bukan dalam peta translasi
             }).join('');
         }).join(' ');
     }
@@ -56,6 +64,7 @@ function translateText() {
         translatedText = translatedText.replace(`__PROTECTED_${index}__`, `'${text}'`);
     });
 
+    // Tampilkan hasil translasi
     document.getElementById('translatedText').textContent = translatedText;
     document.getElementById('resultAlert').style.display = 'block';
 }
@@ -86,4 +95,4 @@ function copyToClipboard() {
             confirmButtonText: 'OK'
         });
     }
-            }
+                                                                  }
