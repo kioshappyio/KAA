@@ -24,12 +24,12 @@ function translateText() {
         return;
     }
 
-    // Regex untuk mendeteksi teks dalam tanda kutip tunggal
-    const regex = /'([^']+)'/g;
+    // Regex untuk mendeteksi teks dalam tanda kurung siku
+    const regex = /([^]+)/g;
     let protectedTexts = [];
     let modifiedText = inputText;
 
-    // Ambil teks dalam tanda kutip dan ganti dengan placeholder
+    // Ambil teks dalam kurung siku dan ganti dengan placeholder
     let match;
     while ((match = regex.exec(inputText)) !== null) {
         protectedTexts.push(match[1]);
@@ -43,25 +43,23 @@ function translateText() {
             if (alphabet_map[char]) {
                 return alphabet_map[char];
             } else if (char === ' ') {
-                return ' ';
+                return ' '; // Pertahankan spasi
             }
             return char;
-        }).join(' ');
+        }).join(' ').replace(/\s+/g, ' ').trim(); // Rapikan spasi
     } else {
         // Terjemahkan ke bahasa asli
         translatedText = modifiedText.split(/\s+/).map(word => {
             if (reverse_alphabet_map[word]) {
                 return reverse_alphabet_map[word];
-            } else if (word.includes('__PROTECTED_')) {
-                return word; // Abaikan placeholder
             }
             return word;
-        }).join('').replace(/__PROTECTED_(\d+)/g, (_, index) => `'${protectedTexts[index]}'`);
+        }).join('').replace(/__PROTECTED_(\d+)/g, (_, index) => `[${protectedTexts[index]}]`);
     }
 
-    // Kembalikan teks yang dilindungi (dalam tanda kutip)
+    // Kembalikan teks yang dilindungi (tidak diterjemahkan)
     protectedTexts.forEach((text, index) => {
-        translatedText = translatedText.replace(`__PROTECTED_${index}__`, `'${text}'`);
+        translatedText = translatedText.replace(`__PROTECTED_${index}__`, `[${text}]`);
     });
 
     document.getElementById('translatedText').textContent = translatedText.trim();
@@ -94,4 +92,4 @@ function copyToClipboard() {
             confirmButtonText: 'OK'
         });
     }
-                }
+        }
