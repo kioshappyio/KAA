@@ -1,0 +1,68 @@
+:root {
+    --primary-color: #3498db;
+    --background-color: #ecf0f1;
+    --input-border: #bdc3c7;
+    --font-family: 'Poppins', sans-serif;
+    --border-radius: 12px;
+    --button-radius: 8px;
+}
+
+body {
+    font-family: var(--font-family);
+    background-color: var(--background-color);
+    color: #333;
+}
+
+.card {
+    border-radius: var(--border-radius);
+}
+
+.form-control {
+    border-radius: var(--border-radius);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.btn {
+    border-radius: var(--button-radius);
+    font-size: 18px;
+    padding: 12px;
+    transition: all 0.3s ease;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+}
+
+.btn-primary:hover {
+    background-color: #2980b9;
+}
+
+.btn-success {
+    background-color: #2ecc71;
+}
+
+.btn-success:hover {
+    background-color: #27ae60;
+}
+
+.btn-warning {
+    background-color: #f39c12;
+}
+
+.btn-warning:hover {
+    background-color: #e67e22;
+}
+
+.alert {
+    background-color: #dff0d8;
+    color: #3c763d;
+    padding: 10px;
+    border-radius: var(--border-radius);
+    font-weight: bold;
+    margin-bottom: 20px;
+  }
