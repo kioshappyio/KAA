@@ -24,45 +24,30 @@ function translateText() {
         return;
     }
 
-    // Regex untuk mendeteksi teks dalam tanda kurung siku
-    const regex = /([^]+)/g;
-    let protectedTexts = [];
-    let modifiedText = inputText;
-
-    // Ambil teks dalam kurung siku dan ganti dengan placeholder
-    let match;
-    while ((match = regex.exec(inputText)) !== null) {
-        protectedTexts.push(match[1]);
-        modifiedText = modifiedText.replace(match[0], `__PROTECTED_${protectedTexts.length - 1}__`);
-    }
-
     let translatedText;
+
     if (mode === 'toCustom') {
         // Terjemahkan ke bahasa baru
-        translatedText = modifiedText.toUpperCase().split('').map(char => {
-            if (alphabet_map[char]) {
-                return alphabet_map[char];
-            } else if (char === ' ') {
-                return ' '; // Pertahankan spasi
+        translatedText = inputText.replace(/.*?|./g, match => {
+            // Abaikan teks dalam tanda [ ]
+            if (match.startsWith('[') && match.endsWith(']')) {
+                return match; // Tetap biarkan apa adanya
             }
-            return char;
-        }).join(' ').replace(/\s+/g, ' ').trim(); // Rapikan spasi
+            return alphabet_map[match.toUpperCase()] || match; // Terjemahkan selain dalam [ ]
+        }).replace(/\s+/g, ' ');
     } else {
         // Terjemahkan ke bahasa asli
-        translatedText = modifiedText.split(/\s+/).map(word => {
-            if (reverse_alphabet_map[word]) {
-                return reverse_alphabet_map[word];
-            }
-            return word;
-        }).join('').replace(/__PROTECTED_(\d+)/g, (_, index) => `[${protectedTexts[index]}]`);
+        translatedText = inputText.split(/\s{2,}/).map(wordGroup => {
+            return wordGroup.split(' ').map(word => {
+                if (word.startsWith('[') && word.endsWith(']')) {
+                    return word; // Tetap biarkan apa adanya
+                }
+                return reverse_alphabet_map[word] || ''; // Terjemahkan kembali ke bahasa asli
+            }).join('');
+        }).join(' ');
     }
 
-    // Kembalikan teks yang dilindungi (tidak diterjemahkan)
-    protectedTexts.forEach((text, index) => {
-        translatedText = translatedText.replace(`__PROTECTED_${index}__`, `[${text}]`);
-    });
-
-    document.getElementById('translatedText').textContent = translatedText.trim();
+    document.getElementById('translatedText').textContent = translatedText;
     document.getElementById('resultAlert').style.display = 'block';
 }
 
@@ -92,4 +77,4 @@ function copyToClipboard() {
             confirmButtonText: 'OK'
         });
     }
-        }
+                }
