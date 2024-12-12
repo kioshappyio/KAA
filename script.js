@@ -6,64 +6,55 @@ const alphabet_map = {
     'Y': 'Vi', 'Z': 'Zo'
 };
 
-function convertToNewLanguage(word) {
-    let result = [];
-    for (let char of word.toUpperCase()) {
-        if (alphabet_map[char]) {
-            result.push(alphabet_map[char]);
-        } else {
-            result.push(char);
-        }
-    }
-    return result.join(' ');
-}
+// Membuat mapping terbalik untuk translate kembali
+const reverse_alphabet_map = Object.fromEntries(
+    Object.entries(alphabet_map).map(([key, value]) => [value, key])
+);
 
-function checkPin() {
-    const pin = document.getElementById('inputPin').value;
-    const correctPin = "281206";
+function translateText() {
+    const inputText = document.getElementById('inputText').value.trim();
+    const mode = document.getElementById('translationMode').value;
 
-    if (pin === correctPin) {
-        document.getElementById('loginCard').style.display = 'none';
-        document.getElementById('content').style.display = 'block';
+    if (!inputText) {
         Swal.fire({
-            title: 'Akses Berhasil!',
-            text: 'PIN benar, Anda dapat mengonversi kata!',
-            icon: 'success',
+            title: 'Input Kosong!',
+            text: 'Harap masukkan teks untuk diterjemahkan.',
+            icon: 'warning',
             confirmButtonText: 'OK'
         });
-        localStorage.setItem('pinEntered', 'true');
-    } else {
-        Swal.fire({
-            title: 'Akses Ditolak!',
-            text: 'PIN yang Anda masukkan salah.',
-            icon: 'error',
-            confirmButtonText: 'Coba Lagi'
-        }).then(() => {
-            document.getElementById('inputPin').value = '';
-        });
+        return;
     }
-}
 
-function convertWord() {
-    const inputWord = document.getElementById('inputWord').value;
-    const convertedWord = convertToNewLanguage(inputWord);
-    document.getElementById('result').textContent = convertedWord;
+    let translatedText;
+    if (mode === 'toCustom') {
+        // Terjemahkan ke bahasa baru
+        translatedText = inputText.toUpperCase().split('').map(char => {
+            return alphabet_map[char] || char;
+        }).join(' ');
+    } else {
+        // Terjemahkan ke bahasa asli
+        translatedText = inputText.split(' ').map(word => {
+            return reverse_alphabet_map[word] || word;
+        }).join('').toLowerCase();
+    }
+
+    document.getElementById('translatedText').textContent = translatedText;
     document.getElementById('resultAlert').style.display = 'block';
 }
 
 function copyToClipboard() {
-    const resultText = document.getElementById('result').textContent;
-    if (resultText) {
-        navigator.clipboard.writeText(resultText).then(function() {
+    const translatedText = document.getElementById('translatedText').textContent;
+    if (translatedText) {
+        navigator.clipboard.writeText(translatedText).then(() => {
             Swal.fire({
-                title: 'Teks Disalin!',
-                text: 'Hasil konversi telah disalin ke clipboard.',
+                title: 'Berhasil Disalin!',
+                text: 'Hasil terjemahan telah disalin ke clipboard.',
                 icon: 'success',
                 confirmButtonText: 'OK'
             });
-        }).catch(function(err) {
+        }).catch(err => {
             Swal.fire({
-                title: 'Gagal Menyalin',
+                title: 'Gagal Menyalin!',
                 text: 'Terjadi kesalahan saat menyalin teks.',
                 icon: 'error',
                 confirmButtonText: 'OK'
@@ -71,30 +62,10 @@ function copyToClipboard() {
         });
     } else {
         Swal.fire({
-            title: 'Tidak Ada Hasil',
-            text: 'Tidak ada teks yang bisa disalin.',
+            title: 'Tidak Ada Teks!',
+            text: 'Hasil terjemahan kosong.',
             icon: 'warning',
             confirmButtonText: 'OK'
         });
     }
-}
-
-document.getElementById('togglePassword').addEventListener('click', function() {
-    const passwordField = document.getElementById('inputPin');
-    const icon = document.getElementById('togglePassword');
-    
-    if (passwordField.type === "password") {
-        passwordField.type = "text";
-        icon.classList.remove('fa-eye-slash');
-        icon.classList.add('fa-eye');
-    } else {
-        passwordField.type = "password";
-        icon.classList.remove('fa-eye');
-        icon.classList.add('fa-eye-slash');
-    }
-});
-
-if (localStorage.getItem('pinEntered') === 'true') {
-    document.getElementById('loginCard').style.display = 'none';
-    document.getElementById('content').style.display = 'block';
 }
