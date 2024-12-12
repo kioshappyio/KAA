@@ -25,24 +25,16 @@ function translateText() {
     }
 
     let translatedText;
-
     if (mode === 'toCustom') {
         // Terjemahkan ke bahasa baru
-        translatedText = inputText.replace(/.*?|./g, match => {
-            // Abaikan teks dalam tanda [ ]
-            if (match.startsWith('[') && match.endsWith(']')) {
-                return match; // Tetap biarkan apa adanya
-            }
-            return alphabet_map[match.toUpperCase()] || match; // Terjemahkan selain dalam [ ]
-        }).replace(/\s+/g, ' ');
+        translatedText = inputText.toUpperCase().split('').map(char => {
+            return alphabet_map[char] || char;
+        }).join(' ');
     } else {
         // Terjemahkan ke bahasa asli
-        translatedText = inputText.split(/\s{2,}/).map(wordGroup => {
+        translatedText = inputText.split('  ').map(wordGroup => {
             return wordGroup.split(' ').map(word => {
-                if (word.startsWith('[') && word.endsWith(']')) {
-                    return word; // Tetap biarkan apa adanya
-                }
-                return reverse_alphabet_map[word] || ''; // Terjemahkan kembali ke bahasa asli
+                return reverse_alphabet_map[word] || '';
             }).join('');
         }).join(' ');
     }
@@ -77,4 +69,7 @@ function copyToClipboard() {
             confirmButtonText: 'OK'
         });
     }
-                }
+}
+
+
+    
