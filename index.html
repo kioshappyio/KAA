@@ -4,33 +4,34 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Konversi Bahasa Baru</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.1/dist/sweetalert2.min.css">
     <link rel="stylesheet" href="https://kioshappyio.github.io/KAA/style.css">
 </head>
 <body>
-    <div class="container">
-        <div class="input-group">
-            <h1>Masukkan PIN untuk mengakses halaman</h1>
-            <input type="password" id="inputPin" placeholder="Masukkan PIN">
-            <button onclick="checkPin()">Masuk</button>
+    <div class="container d-flex justify-content-center align-items-center vh-100">
+        <div class="card p-4" id="loginCard">
+            <h1 class="text-center mb-4">Masukkan PIN</h1>
+            <div class="mb-3 position-relative">
+                <input type="password" class="form-control" id="inputPin" placeholder="Masukkan PIN" />
+                <i class="fas fa-eye-slash position-absolute" id="togglePassword" style="top: 50%; right: 10px; transform: translateY(-50%); cursor: pointer;"></i>
+            </div>
+            <button class="btn btn-primary w-100" onclick="checkPin()">Masuk</button>
         </div>
-        <div id="content" style="display: none;">
-            <h1>Masukkan kata untuk mengubah ke bahasa baru</h1>
-            <div class="input-group">
-                <input type="text" id="inputWord" placeholder="Masukkan kata">
-                <button onclick="convertWord()">Ubah</button>
+
+        <div id="content" class="card p-4" style="display: none;">
+            <h2 class="text-center mb-4">Masukkan Kata untuk Konversi</h2>
+            <div class="mb-3">
+                <input type="text" class="form-control" id="inputWord" placeholder="Masukkan kata" />
             </div>
-            <div class="alert alert-info">
-                <strong>Kata dalam bahasa baru:</strong>
-                <span id="result"></span>
+            <button class="btn btn-success w-100" onclick="convertWord()">Ubah</button>
+            <div class="alert alert-info mt-3" id="resultAlert" style="display: none;">
+                <strong>Hasil:</strong> <span id="result"></span>
             </div>
-            <button class="copy-btn" onclick="copyToClipboard()">Salin Hasil</button>
-            <button class="sweet-btn" onclick="showSweetAlert()">Tampilkan Sweet Alert</button>
+            <button class="btn btn-warning w-100 mt-2" onclick="copyToClipboard()">Salin Hasil</button>
         </div>
     </div>
+
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.1/dist/sweetalert2.all.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://kit.fontawesome.com/a076d05399.js"></script>
     <script src="https://kioshappyio.github.io/KAA/script.js"></script>
 </body>
-</html>
+                                                                  </html>
