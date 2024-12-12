@@ -6,7 +6,6 @@ const alphabet_map = {
     'Y': 'Vi', 'Z': 'Zo'
 };
 
-// Membuat mapping terbalik untuk translate kembali
 const reverse_alphabet_map = Object.fromEntries(
     Object.entries(alphabet_map).map(([key, value]) => [value, key])
 );
@@ -25,18 +24,37 @@ function translateText() {
         return;
     }
 
+    // Regex untuk mendeteksi teks di dalam tanda kutip tunggal
+    const regex = /'([^']+)'/g;
+    let protectedTexts = [];
+    let modifiedText = inputText;
+
+    // Ambil semua teks dalam tanda kutip dan simpan
+    let match;
+    while ((match = regex.exec(inputText)) !== null) {
+        protectedTexts.push(match[1]);
+        modifiedText = modifiedText.replace(match[0], `__PROTECTED_${protectedTexts.length - 1}__`);
+    }
+
     let translatedText;
     if (mode === 'toCustom') {
         // Terjemahkan ke bahasa baru
-        translatedText = inputText.toUpperCase().split('').map(char => {
+        translatedText = modifiedText.toUpperCase().split('').map(char => {
             return alphabet_map[char] || char;
         }).join(' ');
     } else {
         // Terjemahkan ke bahasa asli
-        translatedText = inputText.split(' ').map(word => {
-            return reverse_alphabet_map[word] || word;
-        }).join('').toLowerCase();
+        translatedText = modifiedText.split('  ').map(wordGroup => {
+            return wordGroup.split(' ').map(word => {
+                return reverse_alphabet_map[word] || '';
+            }).join('');
+        }).join(' ');
     }
+
+    // Kembalikan teks yang dilindungi (dalam tanda kutip)
+    protectedTexts.forEach((text, index) => {
+        translatedText = translatedText.replace(`__PROTECTED_${index}__`, `'${text}'`);
+    });
 
     document.getElementById('translatedText').textContent = translatedText;
     document.getElementById('resultAlert').style.display = 'block';
@@ -68,4 +86,4 @@ function copyToClipboard() {
             confirmButtonText: 'OK'
         });
     }
-}
+            }
