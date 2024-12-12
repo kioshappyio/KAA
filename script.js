@@ -94,8 +94,7 @@ document.getElementById('togglePassword').addEventListener('click', function() {
     }
 });
 
-// Cek jika PIN sudah dimasukkan sebelumnya
 if (localStorage.getItem('pinEntered') === 'true') {
     document.getElementById('loginCard').style.display = 'none';
     document.getElementById('content').style.display = 'block';
-                                                           }
+                            }
